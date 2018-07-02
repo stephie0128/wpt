@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test that NEL reports are not observable from JavaScript</title>
+  <script src='/resources/testharness.js'></script>
+  <script src='/resources/testharnessreport.js'></script>
+  <script src='./support/fetch.sub.js'></script>
+</head>
+<body>
+  <script>
+    promise_test(async t => {
+      var observer = new ReportingObserver((reports, _) => {
+        assert_true(false, "NEL reports should not be observable");
+      }, {"types": ["network-error"]});
+      observer.observe();
+      await fetchNELPolicyResource();
+    });
+  </script>
+</body>
+</html>

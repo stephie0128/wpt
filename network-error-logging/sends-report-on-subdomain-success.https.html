@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test that NEL reports are sent for successful subdomain requests</title>
+  <script src='/resources/testharness.js'></script>
+  <script src='/resources/testharnessreport.js'></script>
+  <script src='./support/fetch.sub.js'></script>
+</head>
+<body>
+  <script>
+    promise_test(async t => {
+      await fetchNELSubdomainPolicyResource();
+      await fetchNELNoPolicyResource('www2');
+      assert_true(await reportExists({
+        url: getNELNoPolicyResourceURL('www2'),
+        type: "network-error",
+        report: {
+          uri: getNELNoPolicyResourceURL('www2'),
+          sampling_fraction: 1.0,
+          status_code: 200,
+          type: "ok",
+        },
+      }));
+    });
+  </script>
+</body>
+</html>
